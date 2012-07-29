@@ -1,6 +1,14 @@
 {	"exports": "engineD",
 	"signature": [
 		{
+			"name": "events",
+			"synopsis": "Lists all events",
+			"description": "Returns minimal info about an event (no comments)",
+			"verb": "GET",
+			"returns": 
+				[{"name":"events", "type":"list", "description":"The list of events"} ]
+		},
+		{
 			"name": "event/create",
 			"synopsis": "Creates a new event",
 			"description": "Creates a new event in the database",
@@ -17,7 +25,7 @@
 				[{"name":"event", "type":"object", "description":"The full event object that was created"} ]
 		},
 		{
-			"name": "event/data",
+			"name": "event/get",
 			"synopsis": "Returns data about an event",
 			"description": "Returns data about an event",
 			"verb": "GET",
@@ -28,6 +36,32 @@
 				}],
 			"returns": 
 				[{"name":"event", "type":"object", "description":"The full event object"} ]
+		},
+		{
+			"name": "comment/add",
+			"synopsis": "Adds a comment to an event",
+			"description": "Adds a comment to an event",
+			"verb": "POST",
+			"options": 
+				[{	"option": "id", 
+					"required":true,
+					"description":"The id of the event"
+				},
+				{	"option": "comment", 
+					"required":true,
+					"description":"The comment"
+				},
+				{	"option": "author", 
+					"required":false,
+					"description":"The name of the author"
+				},
+				{	"option": "published", 
+					"required":false,
+					"description":"If the comment is published"
+				}],
+			"returns": 
+				[{"name":"status", "type":"object", "description":"If the comment was added"},
+				{"name":"comment", "type":"object", "description":"The saved comment object"} ]
 		}
 	], 
 	"path": "engineD"

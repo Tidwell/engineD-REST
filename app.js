@@ -122,6 +122,44 @@ parser.on("comment/add", function(config, callback) {
 
 });
 
+//returns a list of comments, accepts a date as config.options.date to
+//use as a start time (assumes comments are in order by time)
+parser.on("comment/list",function(config,callback) {
+	var id = parseId(config.options.id);
+	if (!id) {
+		callback(true,{message: 'invalid id'});
+		return;
+	}
+	db.events.findOne({"_id": id},function(err,doc) {
+		if (!doc) {
+			callback(true, {message: 'invalid id'});
+			return;
+		}
+		//check if the date is valid
+		if (config.options.date && new Date(config.options.date) == 'Invalid Date') {
+			callback(true,{message: 'invalid date'});
+			return;
+		} else if (config.options.date){ //if it is, generate a js date obj
+			config.options.date = new Date(config.options.date);
+		}
+
+		var comments = doc.comments || [];
+
+		if (config.options.date) {
+			var done = false;
+			comments.forEach(function(comment,i) {
+				if (!done && comment.date > config.options.date) {
+					comments = comments.slice(i,comments.length);
+					done = true;
+				}
+			});
+		}
+
+
+		callback(false,comments);
+	});
+});
+
 //expose the api
 module.exports = parser.parse(configPath);
 

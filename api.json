@@ -80,6 +80,22 @@
 			"returns": 
 				[{"name":"status", "type":"object", "description":"If the comment was added"},
 				{"name":"comment", "type":"object", "description":"The saved comment object"} ]
+		},
+		{
+			"name": "comment/list",
+			"synopsis": "Returns comments for an event",
+			"description": "Returns all comments for an event or just those since a js Date()",
+			"verb": "GET",
+			"options": 
+				[{	"option": "id", 
+					"required":true,
+					"description":"The id of the event"
+				},
+				{	"option": "date", 
+					"description":"A js Date() to get comments since"
+				}],
+			"returns": 
+				[{"name":"comments", "type":"list", "description":"The list of comments"}]
 		}
 	], 
 	"path": "engineD"

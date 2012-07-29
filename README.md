@@ -13,3 +13,6 @@ Run as:
 
 Test console:
 http://localhost:3000/engineD/testapp/
+
+Needs a mongo database called: "engineD"
+With collections: ["events"]

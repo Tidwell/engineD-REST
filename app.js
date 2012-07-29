@@ -49,6 +49,30 @@ parser.on("event/create", function(config, callback) {
 	});
 });
 
+parser.on("event/update", function(config, callback) {
+	var id = parseId(config.options.id);
+	if (!id) {
+		callback(true,{message: 'invalid id'});
+	}
+	//query the DB to find the event
+	db.events.findOne({"_id": id},function(err,doc) {
+		if (!doc) {
+			callback(true, {message: 'invalid id'});
+			return;
+		}
+		if (config.options.startTime && new Date(config.options.startTime) == 'Invalid Date') {
+			callback(true,{message: 'invalid startTime'});
+			return;
+		}
+		doc.startTime = config.options.startTime ? new Date(config.options.startTime) : doc.startTime;
+		doc.name = config.options.name || doc.name;
+
+		db.events.save(doc,function(err){
+			callback(false,{message: 'success',event: filter(doc)});
+		});
+	});
+});
+
 parser.on("event/get", function(config, callback) {
 	var id = parseId(config.options.id);
 	if (!id) {
@@ -92,7 +116,6 @@ parser.on("comment/add", function(config, callback) {
 		//we have a valid document to add the comment to
 		doc.comments.push(newComment);
 		db.events.save(doc,function(err,doc){
-			console.log(doc);
 			callback(false,{message: 'success',comment: newComment});
 		});
 	});

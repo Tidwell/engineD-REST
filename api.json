@@ -25,6 +25,24 @@
 				[{"name":"event", "type":"object", "description":"The full event object that was created"} ]
 		},
 		{
+			"name": "event/update",
+			"synopsis": "Updates an existing event",
+			"description": "Updates an existing event",
+			"verb": "POST",
+			"options": 
+				[{	"option": "id",
+					"description":"The id of the event to update"
+				},
+				{	"option": "name",
+					"description":"The name of the event"
+				},
+				{	"option": "startTime", 
+					"description":"The time to start the event - parseable by javascript Date()"
+				}],
+			"returns": 
+				[{"name":"event", "type":"object", "description":"The updated event object"} ]
+		},
+		{
 			"name": "event/get",
 			"synopsis": "Returns data about an event",
 			"description": "Returns data about an event",

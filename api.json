@@ -96,6 +96,36 @@
 			"returns": 
 				[{"name":"status", "type":"object", "description":"If the comment was added"},
 				{"name":"comment", "type":"object", "description":"The saved comment object"} ]
+		},
+		{
+			"name": "comment/update",
+			"synopsis": "Updates a comment on an event",
+			"description": "Updates a comment on an event",
+			"verb": "POST",
+			"options": 
+				[{	"option": "id", 
+					"required":true,
+					"description":"The id of the event"
+				},
+				{	"option": "comment", 
+					"required":true,
+					"description":"The comment"
+				},
+				{	"option": "author", 
+					"required":false,
+					"description":"The name of the author"
+				},
+				{	"option": "published", 
+					"required":false,
+					"description":"If the comment is published"
+				},
+				{	"option": "commentId", 
+					"required":true,
+					"description":"The id of the comment within the event's comment list"
+				}],
+			"returns": 
+				[{"name":"status", "type":"object", "description":"If the comment was updated"},
+				{"name":"comment", "type":"object", "description":"The saved comment object"} ]
 		}
 	], 
 	"path": "engineD"

@@ -122,7 +122,7 @@ parser.on("comment/list",function(config,callback) {
 				}
 			});
 		}
-		
+
 		callback(false,comments);
 	});
 });
@@ -155,6 +155,47 @@ parser.on("comment/create", function(config, callback) {
 		doc.comments.push(newComment);
 		db.events.save(doc,function(err,doc){
 			callback(false,{message: 'success',comment: newComment});
+		});
+	});
+
+});
+
+parser.on("comment/update", function(config, callback) {
+	var id = parseId(config.options.id);
+	if (!id) {
+		callback(true,{message: 'invalid id'});
+		return;
+	}
+	if (!config.options.commentId) {
+		callback(true,{message: 'invalid commentId'});
+		return;
+	}
+	//query the DB to find the event
+	db.events.findOne({"_id": id},function(err,doc) {
+		if (!doc) {
+			callback(true, {message: 'invalid id'});
+			return;
+		}
+		if (!doc.comments[config.options.commentId]) {
+			callback(true,{message: 'invalid commentId'});
+			return;
+		}
+		var published;
+		//set published to true if passed in as a string, otherwise false
+		if (config.options.published) {
+			published = (config.options.published === 'true');
+		} else {
+			published = doc.comments[config.options.commentId].published;
+		}
+		var updatedComment = {
+			comment: config.options.comment || doc.comments[config.options.commentId].comment,
+			author: config.options.author || doc.comments[config.options.commentId].author,
+			published: published,
+			date: doc.comments[config.options.commentId].date
+		};
+		doc.comments[config.options.commentId] = updatedComment;
+		db.events.save(doc,function(err,doc){
+			callback(false,{message: 'success',comment: updatedComment});
 		});
 	});
 

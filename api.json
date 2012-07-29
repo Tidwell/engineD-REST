@@ -108,7 +108,7 @@
 					"description":"The id of the event"
 				},
 				{	"option": "comment", 
-					"required":true,
+					"required":false,
 					"description":"The comment"
 				},
 				{	"option": "author", 

@@ -10,7 +10,7 @@ var parser = new perfectapi.Parser();
 var db = mongojs.connect('engineD', ['events']);
 var ObjectId = mongojs.ObjectId;
 
-parser.on('events',function(config,callback){
+parser.on('event/list',function(config,callback){
 	var returnList = [];
 	db.events.find().forEach(function(i,doc){
 		if (!doc){ //all docs have been found
@@ -23,6 +23,22 @@ parser.on('events',function(config,callback){
 			name: doc.name,
 			startTime: doc.startTime
 		});
+	});
+});
+
+parser.on("event/get", function(config, callback) {
+	var id = parseId(config.options.id);
+	if (!id) {
+		callback(true,{message: 'invalid id'});
+	}
+	//query the DB to find the event
+	db.events.findOne({"_id": id},function(err,doc) {
+		if (!doc) {
+			callback(true, {message: 'invalid id'});
+			return;
+		}
+		//all good, send back
+		callback(false, filter(doc));
 	});
 });
 
@@ -73,54 +89,6 @@ parser.on("event/update", function(config, callback) {
 	});
 });
 
-parser.on("event/get", function(config, callback) {
-	var id = parseId(config.options.id);
-	if (!id) {
-		callback(true,{message: 'invalid id'});
-	}
-	//query the DB to find the event
-	db.events.findOne({"_id": id},function(err,doc) {
-		if (!doc) {
-			callback(true, {message: 'invalid id'});
-			return;
-		}
-		//all good, send back
-		callback(false, filter(doc));
-	});
-});
-
-parser.on("comment/add", function(config, callback) {
-	var id = parseId(config.options.id);
-	if (!id) {
-		callback(true,{message: 'invalid id'});
-		return;
-	}
-	if (!config.options.comment) {
-		callback(true,{message: 'invalid comment'});
-		return;
-	}
-	//set published to true if passed in as a string, otherwise false
-	config.options.published = (config.options.published === 'true');
-	//query the DB to find the event
-	db.events.findOne({"_id": id},function(err,doc) {
-		if (!doc) {
-			callback(true, {message: 'invalid id'});
-			return;
-		}
-		var newComment = {
-			comment: config.options.comment,
-			date: new Date(),
-			author: config.options.author || null,
-			published: config.options.published
-		};
-		//we have a valid document to add the comment to
-		doc.comments.push(newComment);
-		db.events.save(doc,function(err,doc){
-			callback(false,{message: 'success',comment: newComment});
-		});
-	});
-
-});
 
 //returns a list of comments, accepts a date as config.options.date to
 //use as a start time (assumes comments are in order by time)
@@ -154,10 +122,42 @@ parser.on("comment/list",function(config,callback) {
 				}
 			});
 		}
-
-
+		
 		callback(false,comments);
 	});
+});
+
+parser.on("comment/create", function(config, callback) {
+	var id = parseId(config.options.id);
+	if (!id) {
+		callback(true,{message: 'invalid id'});
+		return;
+	}
+	if (!config.options.comment) {
+		callback(true,{message: 'invalid comment'});
+		return;
+	}
+	//set published to true if passed in as a string, otherwise false
+	config.options.published = (config.options.published === 'true');
+	//query the DB to find the event
+	db.events.findOne({"_id": id},function(err,doc) {
+		if (!doc) {
+			callback(true, {message: 'invalid id'});
+			return;
+		}
+		var newComment = {
+			comment: config.options.comment,
+			date: new Date(),
+			author: config.options.author || null,
+			published: config.options.published
+		};
+		//we have a valid document to add the comment to
+		doc.comments.push(newComment);
+		db.events.save(doc,function(err,doc){
+			callback(false,{message: 'success',comment: newComment});
+		});
+	});
+
 });
 
 //expose the api

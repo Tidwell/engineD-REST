@@ -1,12 +1,25 @@
 {	"exports": "engineD",
 	"signature": [
 		{
-			"name": "events",
+			"name": "event/list",
 			"synopsis": "Lists all events",
 			"description": "Returns minimal info about an event (no comments)",
 			"verb": "GET",
 			"returns": 
 				[{"name":"events", "type":"list", "description":"The list of events"} ]
+		},
+		{
+			"name": "event/get",
+			"synopsis": "Returns data about an event",
+			"description": "Returns data about an event",
+			"verb": "GET",
+			"options": 
+				[{	"option": "id", 
+					"required":true,
+					"description":"The id of the event"
+				}],
+			"returns": 
+				[{"name":"event", "type":"object", "description":"The full event object"} ]
 		},
 		{
 			"name": "event/create",
@@ -43,20 +56,23 @@
 				[{"name":"event", "type":"object", "description":"The updated event object"} ]
 		},
 		{
-			"name": "event/get",
-			"synopsis": "Returns data about an event",
-			"description": "Returns data about an event",
+			"name": "comment/list",
+			"synopsis": "Returns comments for an event",
+			"description": "Returns all comments for an event or just those since a js Date()",
 			"verb": "GET",
 			"options": 
 				[{	"option": "id", 
 					"required":true,
 					"description":"The id of the event"
+				},
+				{	"option": "date", 
+					"description":"A js Date() to get comments since"
 				}],
 			"returns": 
-				[{"name":"event", "type":"object", "description":"The full event object"} ]
+				[{"name":"comments", "type":"list", "description":"The list of comments"}]
 		},
 		{
-			"name": "comment/add",
+			"name": "comment/create",
 			"synopsis": "Adds a comment to an event",
 			"description": "Adds a comment to an event",
 			"verb": "POST",
@@ -80,22 +96,6 @@
 			"returns": 
 				[{"name":"status", "type":"object", "description":"If the comment was added"},
 				{"name":"comment", "type":"object", "description":"The saved comment object"} ]
-		},
-		{
-			"name": "comment/list",
-			"synopsis": "Returns comments for an event",
-			"description": "Returns all comments for an event or just those since a js Date()",
-			"verb": "GET",
-			"options": 
-				[{	"option": "id", 
-					"required":true,
-					"description":"The id of the event"
-				},
-				{	"option": "date", 
-					"description":"A js Date() to get comments since"
-				}],
-			"returns": 
-				[{"name":"comments", "type":"list", "description":"The list of comments"}]
 		}
 	], 
 	"path": "engineD"

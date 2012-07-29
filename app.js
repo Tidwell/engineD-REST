@@ -17,8 +17,9 @@ parser.on('events',function(config,callback){
 			callback(false,returnList);
 			return;
 		}
+		doc = filter(doc);
 		returnList.push({
-			id: doc._id,
+			id: doc.id,
 			name: doc.name,
 			startTime: doc.startTime
 		});
@@ -29,7 +30,7 @@ parser.on("event/create", function(config, callback) {
 	var err = false;
 	//make sure a name was provided
 	if (!config.options.name) {
-		callback(true,{message: 'name is required'});
+		callback(true,{message: 'invalid name'});
 		return;
 	}
 	//if a start time was provided, make sure it parses to a date
@@ -101,11 +102,13 @@ parser.on("comment/add", function(config, callback) {
 //expose the api
 module.exports = parser.parse(configPath);
 
+//util functions
 function filter(doc) {
 	doc.id = doc._id;
 	delete doc._id;
 	return doc;
 }
+
 function parseId(id) {
 	//make sure they passed an id
 	if (!id) {

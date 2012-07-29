@@ -1,0 +1,12 @@
+{ "name": "engineD"
+, "version": "0.0.1"
+, "description": "engineD API"
+, "main": "./app.js"
+, "bin": "./app.js"
+, "engines": {
+    "node" : ">=0.6.5"
+  }
+, "dependencies": {
+    "perfectapi": ">=0.0.13"
+  }
+}

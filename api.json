@@ -1,0 +1,34 @@
+{	"exports": "engineD",
+	"signature": [
+		{
+			"name": "event/create",
+			"synopsis": "Creates a new event",
+			"description": "Creates a new event in the database",
+			"verb": "POST",
+			"options": 
+				[{	"option": "name", 
+					"required":true,
+					"description":"The name of the event"
+				},
+				{	"option": "startTime", 
+					"description":"The time to start the event - parseable by javascript Date()"
+				}],
+			"returns": 
+				[{"name":"event", "type":"object", "description":"The full event object that was created"} ]
+		},
+		{
+			"name": "event/data",
+			"synopsis": "Returns data about an event",
+			"description": "Returns data about an event",
+			"verb": "GET",
+			"options": 
+				[{	"option": "id", 
+					"required":true,
+					"description":"The id of the event"
+				}],
+			"returns": 
+				[{"name":"event", "type":"object", "description":"The full event object"} ]
+		}
+	], 
+	"path": "engineD"
+}
